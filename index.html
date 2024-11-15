@@ -1,68 +1,73 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botão WhatsApp</title>
+    <title>Mapa com Roteamento</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <style>
-        /* Estilo do botão */
-        .whatsapp-button {
-            display: inline-block;
-            background-color: #25D366; /* Cor do WhatsApp */
-            color: #fff; /* Texto branco */
-            padding: 12px 24px; /* Espaçamento interno */
-            font-size: 18px; /* Tamanho da fonte */
-            font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
-            border: none; /* Sem borda */
-            border-radius: 8px; /* Bordas arredondadas */
-            cursor: pointer; /* Cursor em formato de mão */
-            text-decoration: none; /* Remove sublinhado */
-            transition: background-color 0.3s ease; /* Animação */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-        }
-
-        /* Efeito de hover no botão */
-        .whatsapp-button:hover {
-            background-color: #1da851; /* Tom mais escuro no hover */
+        #map {
+            width: 100%;
+            height: 500px;
         }
     </style>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 </head>
 <body>
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
-    <div style="text-align: center; margin-top: 50px;">
-        <!-- Botão que redireciona para o WhatsApp -->
-        <a href="https://wa.link/hcuvmy"
-        class="whatsapp-button" target="_blank">
-        Fale Conosco no WhatsApp
-     </a>
-     
-    </div>
 
-    <div id="map" style="width: 100%; height: 500px;"></div>
+<h3>Mapa com Roteamento</h3>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
-  // Inicializa o mapa
-  const map = L.map('map').setView([-7.833536326468693, -34.90643798462722], 13); // Zoom inicial no destino
+    // Coordenadas do ponto de destino
+    const destinoLat = -8.047562; // Latitude do destino
+    const destinoLng = -34.877;   // Longitude do destino
 
-  // Adiciona o mapa do OpenStreetMap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
+    // Inicializa o mapa com o centro no destino
+    const map = L.map('map').setView([destinoLat, destinoLng], 13);
 
-  // Adiciona o roteamento com Leaflet Routing Machine
-  L.Routing.control({
-    waypoints: [
-      null, // Para definir a localização do usuário automaticamente
-      L.latLng(-7.833536326468693, -34.90643798462722) // Coordenadas do ponto de destino
-    ],
-    routeWhileDragging: true,
-    geocoder: L.Control.Geocoder.nominatim()
-  }).addTo(map);
+    // Adiciona o mapa do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Adiciona um marcador no ponto de destino
+    L.marker([destinoLat, destinoLng]).addTo(map)
+        .bindPopup("Destino")
+        .openPopup();
+
+    // Função para iniciar o roteamento quando a localização do usuário for obtida
+    function iniciarRoteamento(position) {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+
+        // Adiciona o roteamento com Leaflet Routing Machine
+        L.Routing.control({
+            waypoints: [
+                L.latLng(userLat, userLng), // Localização do usuário
+                L.latLng(destinoLat, destinoLng) // Localização do destino
+            ],
+            routeWhileDragging: true,
+            geocoder: L.Control.Geocoder.nominatim()
+        }).addTo(map);
+    }
+
+    // Função de erro caso a geolocalização falhe
+    function erroGeolocalizacao(error) {
+        alert("Não foi possível obter a localização: " + error.message);
+    }
+
+    // Solicita a localização do usuário
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(iniciarRoteamento, erroGeolocalizacao);
+    } else {
+        alert("Geolocalização não é suportada pelo seu navegador.");
+    }
 </script>
 
 </body>
