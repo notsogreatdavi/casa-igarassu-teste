@@ -24,8 +24,8 @@
 
 <script>
     // Coordenadas do ponto de destino
-    const destinoLat = -8.047562; // Latitude do destino
-    const destinoLng = -34.877;   // Longitude do destino
+    const destinoLat = -7.833400290096833; // Latitude do destino -7.833400290096833, 
+    const destinoLng = -34.90643569170815;   // Longitude do destino
 
     // Inicializa o mapa com o centro no destino
     const map = L.map('map').setView([destinoLat, destinoLng], 13);
@@ -38,7 +38,7 @@
 
     // Adiciona um marcador no ponto de destino
     L.marker([destinoLat, destinoLng]).addTo(map)
-        .bindPopup("Destino")
+        .bindPopup("Casa Igarassu")
         .openPopup();
 
     // Função para iniciar o roteamento quando a localização do usuário for obtida
