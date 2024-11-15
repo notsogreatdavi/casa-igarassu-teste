@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botão WhatsApp</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+    <style>
+        /* Estilo do botão */
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366; /* Cor do WhatsApp */
+            color: #fff; /* Texto branco */
+            padding: 12px 24px; /* Espaçamento interno */
+            font-size: 18px; /* Tamanho da fonte */
+            font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+            border: none; /* Sem borda */
+            border-radius: 8px; /* Bordas arredondadas */
+            cursor: pointer; /* Cursor em formato de mão */
+            text-decoration: none; /* Remove sublinhado */
+            transition: background-color 0.3s ease; /* Animação */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+        /* Efeito de hover no botão */
+        .whatsapp-button:hover {
+            background-color: #1da851; /* Tom mais escuro no hover */
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px;">
+        <!-- Botão que redireciona para o WhatsApp -->
+        <a href="https://wa.link/hcuvmy"
+        class="whatsapp-button" target="_blank">
+        Fale Conosco no WhatsApp
+     </a>
+     
+    </div>
+
+    <div id="map" style="width: 100%; height: 500px;"></div>
+
+<script>
+  // Inicializa o mapa
+  const map = L.map('map').setView([-7.833536326468693, -34.90643798462722], 13); // Zoom inicial no destino
+
+  // Adiciona o mapa do OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Adiciona o roteamento com Leaflet Routing Machine
+  L.Routing.control({
+    waypoints: [
+      null, // Para definir a localização do usuário automaticamente
+      L.latLng(-7.833536326468693, -34.90643798462722) // Coordenadas do ponto de destino
+    ],
+    routeWhileDragging: true,
+    geocoder: L.Control.Geocoder.nominatim()
+  }).addTo(map);
+</script>
+
+</body>
+</html>
