@@ -24,45 +24,38 @@
 
 <script>
     // Coordenadas do ponto de destino
-    const destinoLat = -7.833400290096833; // Latitude do destino -7.833400290096833, 
-    const destinoLng = -34.90643569170815;   // Longitude do destino
-
-    // Inicializa o mapa com o centro no destino
+    const destinoLat = -7.833400290096833; 
+    const destinoLng = -34.90643569170815;
+    
     const map = L.map('map').setView([destinoLat, destinoLng], 13);
 
-    // Adiciona o mapa do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Adiciona um marcador no ponto de destino
     L.marker([destinoLat, destinoLng]).addTo(map)
         .bindPopup("Casa Igarassu")
         .openPopup();
 
-    // Função para iniciar o roteamento quando a localização do usuário for obtida
     function iniciarRoteamento(position) {
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
 
-        // Adiciona o roteamento com Leaflet Routing Machine
         L.Routing.control({
             waypoints: [
-                L.latLng(userLat, userLng), // Localização do usuário
-                L.latLng(destinoLat, destinoLng) // Localização do destino
+                L.latLng(userLat, userLng),
+                L.latLng(destinoLat, destinoLng)
             ],
             routeWhileDragging: true,
             geocoder: L.Control.Geocoder.nominatim()
         }).addTo(map);
     }
 
-    // Função de erro caso a geolocalização falhe
     function erroGeolocalizacao(error) {
         alert("Não foi possível obter a localização: " + error.message);
     }
 
-    // Solicita a localização do usuário
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(iniciarRoteamento, erroGeolocalizacao);
     } else {
