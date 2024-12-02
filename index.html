@@ -17,57 +17,66 @@
 
 <h3>Mapa com Roteamento</h3>
 <div id="map"></div>
-
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
-    // Coordenadas do ponto de destino
-    const destinoLat = -7.833400290096833; // Latitude do destino -7.833400290096833, 
-    const destinoLng = -34.90643569170815;   // Longitude do destino
+    const destinoLat = -7.833400290096833; 
+    const destinoLng = -34.90643569170815; 
 
-    // Inicializa o mapa com o centro no destino
     const map = L.map('map').setView([destinoLat, destinoLng], 13);
 
-    // Adiciona o mapa do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Adiciona um marcador no ponto de destino
     L.marker([destinoLat, destinoLng]).addTo(map)
         .bindPopup("Casa Igarassu")
         .openPopup();
 
-    // Função para iniciar o roteamento quando a localização do usuário for obtida
     function iniciarRoteamento(position) {
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
 
-        // Adiciona o roteamento com Leaflet Routing Machine
         L.Routing.control({
             waypoints: [
-                L.latLng(userLat, userLng), // Localização do usuário
-                L.latLng(destinoLat, destinoLng) // Localização do destino
+                L.latLng(userLat, userLng), 
+                L.latLng(destinoLat, destinoLng) 
             ],
             routeWhileDragging: true,
-            geocoder: L.Control.Geocoder.nominatim()
+            geocoder: L.Control.Geocoder.nominatim(),
         }).addTo(map);
     }
 
-    // Função de erro caso a geolocalização falhe
     function erroGeolocalizacao(error) {
         alert("Não foi possível obter a localização: " + error.message);
     }
 
-    // Solicita a localização do usuário
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(iniciarRoteamento, erroGeolocalizacao);
     } else {
         alert("Geolocalização não é suportada pelo seu navegador.");
     }
+
+            var pontosTuristicos = [
+            {
+                nome: "Igreja dos Santos Cosme e Damião",
+                coordenadas: [-7.833810046713314, -34.90619392052885],
+                descricao: "Considerada a igreja mais antiga do Brasil em funcionamento contínuo."
+            },
+            {
+                nome: "Museu Pinacoteca de Igarassu",
+                coordenadas: [-7.832526704743105, -34.90517173403647],
+                descricao: "Abriga um acervo de obras históricas e religiosas da região."
+            },
+        ];
+
+        pontosTuristicos.forEach(ponto => {
+            var marker = L.marker(ponto.coordenadas).addTo(map);
+            marker.bindPopup(`<b>${ponto.nome}</b><br>${ponto.descricao}`);
+        });
 </script>
 
 </body>
